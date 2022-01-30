@@ -32,6 +32,7 @@ class GenModelForm(FlaskForm):
     output_dims3 = IntegerField('Output Dims')
     output_dims4 = IntegerField('Output Dims')
 
+# check if file has allowed extension
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
 
@@ -53,6 +54,7 @@ def generate_model():
     output_dims2 = form.output_dims2.data
     output_dims3 = form.output_dims3.data
     output_dims4 = form.output_dims4.data
+
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No file part')
@@ -67,6 +69,7 @@ def generate_model():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
+            # try to generate model 10 times
             model, iter = 'Error', 0
             while model == 'Error' and iter < 10:
                 try:
